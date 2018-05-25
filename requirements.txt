@@ -1,0 +1,3 @@
+pytelegrambotapi
+python-vlc
+daemonize
