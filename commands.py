@@ -9,7 +9,7 @@ hCMD = []
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    ans = 'Привет! Меня зовут KIT. Чтобы узнать что я умею, нажми /help .'
+    ans = 'Привет! Меня зовут KIT. Чтобы узнать что я умею, нажми /help'
     bot.send_message(message.chat.id, ans)
 commands['/start'] = start
 
@@ -41,5 +41,13 @@ def kill(message):
     ans = 'Оййй'
     bot.send_message(message.chat.id, ans)
     os.system("kill -9 `ps -ef | grep python\ bot| grep -v grep | awk '{print $2}'`")
+
 commands['/kill'] = kill
 hCMD.append('/kill')
+
+
+@bot.message_handler(func=lambda m: (m.text.startswith('/')) and (m.text.split(' ')[0] not in CMD))
+def check_command(message):
+    wrong_command = message.text.split(' ')[0]
+    ans = f'Я не знаю, что такое {wrong_command}. Нажмите /help , чтобы узнать, что я умею'
+    bot.send_message(message.chat.id, ans)
