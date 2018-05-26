@@ -14,6 +14,23 @@ CMD = commands.keys()
 # list of hidden commands
 hCMD = []
 
+user_ids = [215500416, 475413364]
+
+
+def filter(func):
+    def wrapped(message, *args, **kwargs):
+        if message.chat.id not in user_ids:
+            ans = ''
+            if message.text[:6] == '/start':
+                ans = 'Привет. Я KIT, и буду разговаривать только с Леной и Володей.\n' \
+                      + 'Возможно, с Дмитрием Артуровичем.\nНо это не точно.'
+            ans = ans + 'Ты кто такой?. Уходи.'
+            bot.send_message(message.chat.id, ans)
+            return 0
+        else:
+            return func(message=message, *args, **kwargs)
+
+    return wrapped
 
 # some stuff
 
@@ -31,6 +48,7 @@ def get_abs_path(r_path):
 
 ####################
 
+@filter
 @bot.message_handler(commands=['start'])
 def start(message):
     ans = 'Привет! Меня зовут KIT. Чтобы узнать что я умею, нажми /help'
@@ -38,6 +56,7 @@ def start(message):
 commands['/start'] = start
 
 
+@filter
 @bot.message_handler(commands=['help'])
 def help(message):
     with open(get_abs_path('img/help.jpg'), 'rb') as pic:
@@ -53,6 +72,8 @@ def help(message):
 
 commands['/help'] = help
 
+
+@filter
 @bot.message_handler(commands=['hhelp'])
 def hhelp(message):
     ans = 'Вот что я умею:\n'
@@ -70,6 +91,7 @@ commands['/hhelp'] = hhelp
 hCMD.append('/hhelp')
 
 
+@filter
 @bot.message_handler(commands=['kill'])
 def kill(message):
     ans = 'Оййй'
@@ -80,6 +102,7 @@ commands['/kill'] = kill
 hCMD.append('/kill')
 
 
+@filter
 @bot.message_handler(
     func=lambda m: False if m.text is None else ((m.text.startswith('/')) and (m.text.split(' ')[0] not in CMD)))
 def check_command(message):
@@ -88,18 +111,23 @@ def check_command(message):
     bot.send_message(message.chat.id, ans)
 
 
+@filter
 @bot.message_handler(commands=['meow'])
 def say_meow(message):
     play_sound(get_abs_path('sounds/meow-1.mp3'), s=2)
 
 commands['/meow'] = say_meow
 
+
+@filter
 @bot.message_handler(commands=['pur'])
 def say_pur(message):
     play_sound(get_abs_path('sounds/purring-1.mp3'), s=4)
 
 commands['/pur'] = say_pur
 
+
+@filter
 @bot.message_handler(commands=['sneeze'])
 def say_sneeze(message):
     play_sound(get_abs_path('sounds/sneeze-1.mp3'), s=2)
@@ -107,6 +135,7 @@ def say_sneeze(message):
 commands['/sneeze'] = say_sneeze
 
 
+@filter
 @bot.message_handler(content_types=["voice"])
 def voice_messages(message):
     file_info = bot.get_file(message.voice.file_id)
