@@ -1,3 +1,6 @@
+from os.path import abspath, dirname
+from os.path import join as jp
+
 from init import *
 
 # dict of commands
@@ -7,12 +10,33 @@ CMD = commands.keys()
 hCMD = []
 
 
+def get_abs_path(r_path):
+    my_path = abspath(dirname(__file__))
+    return jp(my_path, r_path)
+
+
+
 @bot.message_handler(commands=['start'])
 def start(message):
     ans = 'Привет! Меня зовут KIT. Чтобы узнать что я умею, нажми /help'
     bot.send_message(message.chat.id, ans)
 commands['/start'] = start
 
+
+@bot.message_handler(commands=['help'])
+def help(message):
+    with open(get_abs_path('img/help.jpg'), 'rb') as pic:
+        bot.send_photo(message.chat.id, pic)
+
+    ans = 'Вот что я умею:\n'
+    for cmd in CMD:
+        if cmd not in hCMD:
+            ans = ans + cmd + '\n'
+
+    bot.send_message(message.chat.id, ans)
+
+
+commands['/help'] = help
 
 @bot.message_handler(commands=['hhelp'])
 def hhelp(message):
