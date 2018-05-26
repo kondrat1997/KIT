@@ -1,8 +1,11 @@
+import time
 from os.path import abspath, dirname
 from os.path import join as jp
-import vlc
-import time
 
+import requests
+import vlc
+
+from config import proxy
 from init import *
 
 # dict of commands
@@ -52,9 +55,15 @@ commands['/help'] = help
 
 @bot.message_handler(commands=['hhelp'])
 def hhelp(message):
-    ans = 'Скрытый help. Вот что я умею:\n'
+    ans = 'Вот что я умею:\n'
+    hans = ''
+    ans = ans + 'Не спрятанные:\n'
     for cmd in CMD:
-        ans = ans + cmd + '\n'
+        if cmd not in hCMD:
+            ans = ans + cmd + '\n'
+        else:
+            hans = hans + cmd + '\n'
+    ans = ans + 'Cпрятанные:\n' + hans
 
     bot.send_message(message.chat.id, ans)
 commands['/hhelp'] = hhelp
@@ -71,11 +80,13 @@ commands['/kill'] = kill
 hCMD.append('/kill')
 
 
-@bot.message_handler(func=lambda m: (m.text.startswith('/')) and (m.text.split(' ')[0] not in CMD))
+@bot.message_handler(
+    func=lambda m: False if m.text is None else ((m.text.startswith('/')) and (m.text.split(' ')[0] not in CMD)))
 def check_command(message):
     wrong_command = message.text.split(' ')[0]
     ans = f'Я не знаю, что такое {wrong_command}. Нажмите /help , чтобы узнать, что я умею'
     bot.send_message(message.chat.id, ans)
+
 
 @bot.message_handler(commands=['meow'])
 def say_meow(message):
@@ -94,3 +105,16 @@ def say_sneeze(message):
     play_sound(get_abs_path('sounds/sneeze-1.mp3'), s=2)
 
 commands['/sneeze'] = say_sneeze
+
+
+@bot.message_handler(content_types=["voice"])
+def voice_messages(message):
+    file_info = bot.get_file(message.voice.file_id)
+    voice_link = f'https://api.telegram.org/file/bot{config.token}/{file_info.file_path}'
+    t = message.voice.duration + 1
+
+    r = requests.get(voice_link, allow_redirects=True, proxies=proxy)
+    open(get_abs_path('temp/sound.wav'), 'wb').write(r.content)
+
+    play_sound(get_abs_path('temp/sound.wav'), s=t)
+    print(message)
