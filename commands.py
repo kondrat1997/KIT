@@ -1,5 +1,7 @@
 from os.path import abspath, dirname
 from os.path import join as jp
+import vlc
+import time
 
 from init import *
 
@@ -10,11 +12,21 @@ CMD = commands.keys()
 hCMD = []
 
 
+# some stuff
+
+def play_sound(path, s=0):
+    p = vlc.MediaPlayer(path)
+    p.play()
+
+    if s:
+        time.sleep(s)
+        p.stop()
+
 def get_abs_path(r_path):
     my_path = abspath(dirname(__file__))
     return jp(my_path, r_path)
 
-
+####################
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -64,3 +76,21 @@ def check_command(message):
     wrong_command = message.text.split(' ')[0]
     ans = f'Я не знаю, что такое {wrong_command}. Нажмите /help , чтобы узнать, что я умею'
     bot.send_message(message.chat.id, ans)
+
+@bot.message_handler(commands=['meow'])
+def say_meow(message):
+    play_sound(get_abs_path('sounds/meow-1.mp3'), s=2)
+
+commands['/meow'] = say_meow
+
+@bot.message_handler(commands=['pur'])
+def say_pur(message):
+    play_sound(get_abs_path('sounds/purring-1.mp3'), s=4)
+
+commands['/pur'] = say_pur
+
+@bot.message_handler(commands=['sneeze'])
+def say_sneeze(message):
+    play_sound(get_abs_path('sounds/sneeze-1.mp3'), s=2)
+
+commands['/sneeze'] = say_sneeze
