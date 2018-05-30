@@ -4,6 +4,7 @@ from os.path import join as jp
 
 import requests
 import vlc
+from os import makedirs as md
 
 from config import proxy
 from init import *
@@ -93,10 +94,22 @@ hCMD.append('/hhelp')
 
 @filter
 @bot.message_handler(commands=['kill'])
+def update(message):
+    ans = 'Обновляюсь!'
+    bot.send_message(message.chat.id, ans)
+    os.system(get_abs_path('/scripts/pull_kit.sh'))
+
+
+commands['/update'] = update
+hCMD.append('/update')
+
+@filter
+@bot.message_handler(commands=['kill'])
 def kill(message):
     ans = 'Оййй'
     bot.send_message(message.chat.id, ans)
-    os.system("kill -9 `ps -ef | grep python\ *bot| grep -v grep | awk '{print $2}'`")
+    os.system("kill -9 `ps -ef | grep /root/py3/bin/python\ /tmp/KIT/bot.py| grep -v grep | awk '{print $2}'`")
+    #os.system("kill -9 `ps -ef | grep python\ *bot| grep -v grep | awk '{print $2}'`")
 
 commands['/kill'] = kill
 hCMD.append('/kill')
@@ -143,6 +156,7 @@ def voice_messages(message):
     t = message.voice.duration + 1
 
     r = requests.get(voice_link, allow_redirects=True, proxies=proxy)
+    md(get_abs_path('temp/', exist_ok=True))
     open(get_abs_path('temp/sound.wav'), 'wb').write(r.content)
 
     play_sound(get_abs_path('temp/sound.wav'), s=t)

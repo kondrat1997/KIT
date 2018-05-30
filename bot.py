@@ -1,3 +1,4 @@
+#!/root/py3/bin/python
 import time
 
 from commands import *
