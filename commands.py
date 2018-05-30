@@ -1,10 +1,10 @@
 import time
+from os import makedirs as md
 from os.path import abspath, dirname
 from os.path import join as jp
 
 import requests
 import vlc
-from os import makedirs as md
 
 from config import proxy
 from init import *
@@ -93,7 +93,7 @@ hCMD.append('/hhelp')
 
 
 @filter
-@bot.message_handler(commands=['kill'])
+@bot.message_handler(commands=['update'])
 def update(message):
     ans = 'Обновляюсь!'
     bot.send_message(message.chat.id, ans)
