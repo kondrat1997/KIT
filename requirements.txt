@@ -1,3 +1,4 @@
 pytelegrambotapi
 python-vlc
 requests[socks]
+requests[security]
