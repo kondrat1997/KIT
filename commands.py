@@ -77,6 +77,9 @@ commands['/help'] = help
 @bot.message_handler(commands=['hhelp'])
 @filter
 def hhelp(message):
+    with open(get_abs_path('img/help.jpg'), 'rb') as pic:
+        bot.send_photo(message.chat.id, pic)
+
     ans = 'Вот что я умею:\n'
     hans = ''
     ans = ans + 'Не спрятанные:\n'
