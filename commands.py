@@ -102,7 +102,7 @@ hCMD.append('/hhelp')
 def update(message):
     ans = 'Обновляюсь!'
     bot.send_message(message.chat.id, ans)
-    os.system(get_abs_path('/scripts/pull_kit.sh'))
+    os.system(get_abs_path('./scripts/pull_kit.sh'))
 
 
 commands['/update'] = update
