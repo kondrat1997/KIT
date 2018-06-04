@@ -6,7 +6,7 @@ from os.path import join as jp
 import requests
 import vlc
 
-from config import proxy
+from config import proxy, user_ids
 from init import *
 
 # dict of commands
@@ -15,7 +15,6 @@ CMD = commands.keys()
 # list of hidden commands
 hCMD = []
 
-user_ids = [215500416, 475413364]
 
 
 def filter(func):
