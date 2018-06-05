@@ -6,7 +6,7 @@ from os.path import join as jp
 import requests
 import vlc
 
-from config import proxy, user_ids
+from config import proxy, user_ids, user_names
 from init import *
 
 # dict of commands
@@ -21,7 +21,9 @@ def filter(func):
         if message.chat.id not in user_ids:
             ans = ''
             if message.text[:6] == '/start':
-                ans = 'Привет. Я KIT, и буду разговаривать только с Леной и Володей.\n' \
+                names = ', '.join(user_names)
+                names = names[:-2]
+                ans = f'Привет. Я KIT, и буду разговаривать только с этими людьми: {names}.\n' \
                       + 'Возможно, с Дмитрием Артуровичем.\nНо это не точно.\n'
             ans = ans + 'Ты кто такой? Уходи.'
             bot.send_message(message.chat.id, ans)
