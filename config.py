@@ -10,4 +10,4 @@ apihelper.proxy = {'http': 'socks5h://localhost:1080', 'https': 'socks5h://local
 
 # list of telegram ids
 # who will be allowed to communicate with the bot
-user_ids = [215500416, 475413364]
+user_ids = [215500416]
